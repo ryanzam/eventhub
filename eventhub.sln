@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eventhub.WebApp", "eventhub\Eventhub.WebApp.csproj", "{63B9E25C-3B1A-47BA-81CD-8F9762978819}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63B9E25C-3B1A-47BA-81CD-8F9762978819}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63B9E25C-3B1A-47BA-81CD-8F9762978819}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63B9E25C-3B1A-47BA-81CD-8F9762978819}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63B9E25C-3B1A-47BA-81CD-8F9762978819}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C639BDEE-252D-4FFB-80D2-7E1BC42A39BA}
+	EndGlobalSection
+EndGlobal
