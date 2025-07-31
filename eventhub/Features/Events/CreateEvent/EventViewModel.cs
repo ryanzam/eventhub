@@ -31,26 +31,26 @@ namespace Eventhub.WebApp.Features.Events.CreateEvent
             EndTime = TimeOnly.FromDateTime(DateTime.Now);
         }
 
-        public bool ValidateEventDates()
+        public string? ValidateEventDates()
         {
             if(StartDate > EndDate)
             {
-                return false;
+                return "Start Date should be earlier than End date.";
             }
             if(StartDate == EndDate && StartTime > EndTime)
             {
-                return false;
+                return "Start Time should be earlier than end time";
             }
-            return true;
+            return string.Empty;
         }
 
-        public bool ValidateVenue()
+        public string ValidateVenue()
         {
             if (Category == EventCategoryEnum.Inperson.ToString() && string.IsNullOrWhiteSpace(Venue))
             {
-                return false;
+                return "The Venue is required for In-Person event";
             }
-            return true;
+            return string.Empty;
         }
     }
 }

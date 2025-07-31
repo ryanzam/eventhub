@@ -1,8 +1,15 @@
 ﻿@page "/events/create"
 
-<h3>CreateEventComponent</h3>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
 
-<EditForm Model="eventViewModel">
+<h3>Create Event</h3>
+
+<EditForm Model="eventViewModel" OnValidSubmit="CreateEvent">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -53,4 +60,21 @@
 
 @code {
     private EventViewModel eventViewModel = new EventViewModel();
+
+    string? errorMessage = string.Empty;
+
+    private void CreateEvent()
+    {
+        errorMessage = eventViewModel.ValidateEventDates();
+        if(!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            return;
+        }
+
+        errorMessage = eventViewModel.ValidateVenue();
+        if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            return;
+        }
+    }
 }
