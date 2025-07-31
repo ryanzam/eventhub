@@ -1,0 +1,56 @@
+﻿@page "/events/create"
+
+<h3>CreateEventComponent</h3>
+
+<EditForm Model="eventViewModel">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+   <div class="form-group">
+        <label for="title">Title</label>
+        <InputText id="title" class="form-control" @bind-Value="eventViewModel.Title" />
+        <ValidationMessage For="@(() => eventViewModel.Title)" />
+   </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="eventViewModel.Description" />
+        <ValidationMessage For="@(() => eventViewModel.Description)" />
+    </div>
+
+    <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <InputDate id="startDate" class="form-control" @bind-Value="eventViewModel.StartDate" />
+        <ValidationMessage For="@(() => eventViewModel.StartDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="endDate">End Date</label>
+        <InputDate id="endDate" class="form-control" @bind-Value="eventViewModel.EndDate" />
+        <ValidationMessage For="@(() => eventViewModel.EndDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="startTime">Start Time</label>
+        <input type="time" id="startTime" class="form-control" @bind-value="eventViewModel.StartTime" />
+        <ValidationMessage For="@(() => eventViewModel.StartTime)" />
+    </div>
+
+    <div class="form-group">
+        <label for="endTime">End Time</label>
+        <input type="time" id="endTime" class="form-control" @bind-value="eventViewModel.EndTime" />
+        <ValidationMessage For="@(() => eventViewModel.EndTime)" />
+    </div>
+
+    <div class="form-group">
+        <label for="venue">Venue</label>
+        <InputText id="venue" class="form-control" @bind-Value="eventViewModel.Venue" />
+        <ValidationMessage For="@(() => eventViewModel.Venue)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Create Event</button>
+    <NavLink class="btn btn-secondary" href="/">Cancel</NavLink>
+</EditForm>
+
+@code {
+    private EventViewModel eventViewModel = new EventViewModel();
+}

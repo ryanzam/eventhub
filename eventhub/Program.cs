@@ -1,4 +1,4 @@
-using eventhub.Components;
+using Eventhub.WebApp.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
