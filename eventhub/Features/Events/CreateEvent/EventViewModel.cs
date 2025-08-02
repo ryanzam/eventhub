@@ -18,9 +18,8 @@ namespace Eventhub.WebApp.Features.Events.CreateEvent
         public DateOnly EndDate { get; set; }
         [Required]
         public TimeOnly EndTime { get; set; }
-        [Required]
 
-        public string? Category { get; set; }
+        public string? Category { get; set; } = EventCategoryEnum.Inperson.ToString();
         public string? Venue { get; set; }
 
         public EventViewModel()

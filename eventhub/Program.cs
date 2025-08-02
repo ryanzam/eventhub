@@ -1,10 +1,21 @@
+using Eventhub.WebApp.Data;
+using Eventhub.WebApp.Features.Events.CreateEvent;
 using Eventhub.WebApp.Shared;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<CreateEventService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// configure dbcontext
+builder.Services.AddDbContextFactory<AppDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 

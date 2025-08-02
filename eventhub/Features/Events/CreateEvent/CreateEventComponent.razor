@@ -1,5 +1,7 @@
 ﻿@page "/events/create"
 
+@inject CreateEventService CreateEventService;
+
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <div class="alert alert-danger" role="alert">
@@ -54,6 +56,7 @@
         <InputText id="venue" class="form-control" @bind-Value="eventViewModel.Venue" />
         <ValidationMessage For="@(() => eventViewModel.Venue)" />
     </div>
+    <br />
     <button type="submit" class="btn btn-primary">Create Event</button>
     <NavLink class="btn btn-secondary" href="/">Cancel</NavLink>
 </EditForm>
@@ -61,20 +64,17 @@
 @code {
     private EventViewModel eventViewModel = new EventViewModel();
 
-    string? errorMessage = string.Empty;
+    private string? errorMessage = string.Empty;
 
-    private void CreateEvent()
+    private async Task CreateEvent()
     {
-        errorMessage = eventViewModel.ValidateEventDates();
+        errorMessage = CreateEventService.ValidateEvent(eventViewModel);
+
         if(!string.IsNullOrWhiteSpace(errorMessage))
         {
             return;
-        }
+        };
 
-        errorMessage = eventViewModel.ValidateVenue();
-        if (!string.IsNullOrWhiteSpace(errorMessage))
-        {
-            return;
-        }
+        await CreateEventService.CreateEvent(eventViewModel);
     }
 }
