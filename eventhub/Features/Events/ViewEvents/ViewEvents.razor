@@ -1,11 +1,48 @@
 ﻿@page "/"
+@using Eventhub.WebApp.Features.Events.CreateEvent
+
+@inject ViewEventService ViewEventService
 
 <PageTitle>View Events</PageTitle>
 
 <h3>Events</h3>
 
+@if(events is not null && events.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var eventItem in events)
+            {
+                <tr>
+                    <td>@eventItem.Title</td>
+                    <td>@eventItem.StartDate @eventItem.StartTime</td>
+                    <td>@eventItem.StartTime @eventItem.EndTime</td>
+                    <td>@eventItem.Category</td>
+                </tr>
+            }
+            </tbody>
+    </table>
+}
+
 <a href="/events/create" class="btn btn-primary">Create New Event</a>
 
 @code {
+    private List<EventViewModel> events = new ();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            events = await ViewEventService.GetEventsAsync();
+        }
+    }
 
 }

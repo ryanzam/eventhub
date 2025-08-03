@@ -1,32 +1,25 @@
 ﻿using Eventhub.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Eventhub.WebApp.Data.Entities;
+using AutoMapper;
 
 namespace Eventhub.WebApp.Features.Events.CreateEvent
 {
     public class CreateEventService
     {
         private IDbContextFactory<AppDBContext> dbContextFactory { get; set; }
-        public CreateEventService(IDbContextFactory<AppDBContext> dbContextFactory)
+        private IMapper mapper { get; set; }
+        public CreateEventService(IDbContextFactory<AppDBContext> dbContextFactory, IMapper mapper)
         {
             this.dbContextFactory = dbContextFactory;
+            this.mapper = mapper;
         }
 
         public async Task CreateEvent(EventViewModel eventViewModel)
         {
             using (var dbContext = dbContextFactory.CreateDbContext())
             {
-                var eventEntity = new Event
-                {
-                    Title = eventViewModel.Title,
-                    Description = eventViewModel.Description,
-                    StartDate = eventViewModel.StartDate,
-                    StartTime = eventViewModel.StartTime,
-                    EndDate = eventViewModel.EndDate,
-                    EndTime = eventViewModel.EndTime,
-                    Category = eventViewModel.Category,
-                    Venue = eventViewModel.Venue
-                };
+                var eventEntity = mapper.Map<Event>(eventViewModel);
                 dbContext.Events?.Add(eventEntity);
                 await dbContext.SaveChangesAsync();
             }

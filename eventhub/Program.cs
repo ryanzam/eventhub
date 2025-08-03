@@ -1,11 +1,13 @@
 using Eventhub.WebApp.Data;
 using Eventhub.WebApp.Features.Events.CreateEvent;
+using Eventhub.WebApp.Features.Events.ViewEvents;
 using Eventhub.WebApp.Shared;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<CreateEventService>();
+builder.Services.AddTransient<ViewEventService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -16,6 +18,9 @@ builder.Services.AddDbContextFactory<AppDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// configure automapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
