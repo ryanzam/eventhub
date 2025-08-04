@@ -1,6 +1,6 @@
 using Eventhub.WebApp.Data;
-using Eventhub.WebApp.Features.Events.CreateEvent;
-using Eventhub.WebApp.Features.Events.ViewEvents;
+using Eventhub.WebApp.Features.CreateEvent;
+using Eventhub.WebApp.Features.ViewEvents;
 using Eventhub.WebApp.Shared;
 using Microsoft.EntityFrameworkCore;
 

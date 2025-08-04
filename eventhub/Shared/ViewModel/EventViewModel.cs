@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System.ComponentModel.DataAnnotations;
 
-namespace Eventhub.WebApp.Features.Events.CreateEvent
+namespace Eventhub.WebApp.Shared.ViewModel
 {
     public class EventViewModel
     {
@@ -22,12 +23,18 @@ namespace Eventhub.WebApp.Features.Events.CreateEvent
         public string? Category { get; set; } = EventCategoryEnum.Inperson.ToString();
         public string? Venue { get; set; }
 
+        public string? ImgUrl { get; set; }
+
+        [Required(ErrorMessage ="Upload an image for the event.")]
+        public IBrowserFile CoverImg { get; set; }
+
         public EventViewModel()
         {
             StartDate = DateOnly.FromDateTime(DateTime.Now);
             StartTime = TimeOnly.FromDateTime(DateTime.Now);
             EndDate = DateOnly.FromDateTime(DateTime.Now);
             EndTime = TimeOnly.FromDateTime(DateTime.Now);
+            ImgUrl = $"images/img-placeholder.png";
         }
 
         public string? ValidateEventDates()

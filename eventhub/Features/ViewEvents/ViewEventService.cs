@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Eventhub.WebApp.Data;
 using Eventhub.WebApp.Data.Entities;
-using Eventhub.WebApp.Features.Events.CreateEvent;
+using Eventhub.WebApp.Shared.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace Eventhub.WebApp.Features.Events.ViewEvents
+namespace Eventhub.WebApp.Features.ViewEvents
 {
     public class ViewEventService
     {

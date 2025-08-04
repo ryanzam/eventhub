@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Eventhub.WebApp.Data.Entities;
-using Eventhub.WebApp.Features.Events.CreateEvent;
+using Eventhub.WebApp.Shared.ViewModel;
 
 namespace Eventhub.WebApp.Shared
 {

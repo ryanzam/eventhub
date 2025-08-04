@@ -1,5 +1,7 @@
 ﻿@page "/"
-@using Eventhub.WebApp.Features.Events.CreateEvent
+@using Eventhub.WebApp.Features.CreateEvent
+@using Eventhub.WebApp.Features.ViewEvents
+@using Eventhub.WebApp.Shared.ViewModel
 
 @inject ViewEventService ViewEventService
 
@@ -30,6 +32,9 @@
             }
             </tbody>
     </table>
+} else
+{
+    <Loading />
 }
 
 <a href="/events/create" class="btn btn-primary">Create New Event</a>
@@ -42,6 +47,7 @@
         if(firstRender)
         {
             events = await ViewEventService.GetEventsAsync();
+            StateHasChanged();
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using Eventhub.WebApp.Features.Events.CreateEvent;
+﻿using Eventhub.WebApp.Shared.ViewModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Eventhub.WebApp.Data.Entities

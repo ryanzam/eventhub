@@ -2,8 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Eventhub.WebApp.Data.Entities;
 using AutoMapper;
+using Eventhub.WebApp.Shared.ViewModel;
 
-namespace Eventhub.WebApp.Features.Events.CreateEvent
+namespace Eventhub.WebApp.Features.CreateEvent
 {
     public class CreateEventService
     {

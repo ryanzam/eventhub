@@ -1,4 +1,4 @@
-﻿namespace Eventhub.WebApp.Features.Events.CreateEvent
+﻿namespace Eventhub.WebApp.Shared.ViewModel
 {
     public enum EventCategoryEnum
     {

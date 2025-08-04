@@ -1,4 +1,7 @@
 ﻿@page "/events/create"
+@using Eventhub.WebApp.Features.CreateEvent
+@using Eventhub.WebApp.Shared.ViewModel
+@using SixLabors.ImageSharp.Processing
 
 @inject CreateEventService CreateEventService;
 @inject NavigationManager NavigationManager;
@@ -57,6 +60,17 @@
         <InputText id="venue" class="form-control" @bind-Value="eventViewModel.Venue" />
         <ValidationMessage For="@(() => eventViewModel.Venue)" />
     </div>
+
+    <div class="form-group">
+        <label for="image">Image</label>
+        <InputFile id="image" class="form-control" OnChange="HandleImgUpload" accept=".png"/>
+        <ValidationMessage For="@(() => eventViewModel.CoverImg)" />
+    </div>
+    <br/>
+    @if(eventViewModel.ImgUrl is not null)
+    {
+        <img src=@eventViewModel.ImgUrl alt="event image" class="img-thumbnail"/>
+    }
     <br />
     <button type="submit" class="btn btn-primary">Create Event</button>
     <NavLink class="btn btn-secondary" href="/">Cancel</NavLink>
@@ -79,5 +93,28 @@
         await CreateEventService.CreateEvent(eventViewModel);
 
         NavigationManager.NavigateTo("/");
+    }
+
+    private async Task HandleImgUpload(InputFileChangeEventArgs e)
+    {
+        eventViewModel.CoverImg = e.File;
+
+        if(eventViewModel.CoverImg is null)
+        {
+            errorMessage = "No image selected for the event.";
+            return;
+        }
+
+        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(eventViewModel.CoverImg.Name);
+        var filePath = Path.Combine("wwwroot", "images", "events", fileName);
+
+        using var stream = eventViewModel.CoverImg.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5 MB limit
+        using var image = await SixLabors.ImageSharp.Image.LoadAsync(stream);
+        image.Mutate(x => x.Resize(300, 169));
+
+        using var outputStream = new FileStream(filePath, FileMode.Create);
+        await image.SaveAsync(outputStream, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+
+        eventViewModel.ImgUrl = $"/images/events/{fileName}";
     }
 }
