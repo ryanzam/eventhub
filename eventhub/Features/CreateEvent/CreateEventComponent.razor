@@ -6,75 +6,15 @@
 @inject CreateEventService CreateEventService;
 @inject NavigationManager NavigationManager;
 
-@if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <div class="alert alert-danger" role="alert">
-        @errorMessage
-    </div>
-}
+<ErrorMsgComponent ErrorMessage="@errorMessage"/>
 
 <h3>Create Event</h3>
 
-<EditForm Model="eventViewModel" OnValidSubmit="CreateEvent">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-   <div class="form-group">
-        <label for="title">Title</label>
-        <InputText id="title" class="form-control" @bind-Value="eventViewModel.Title" />
-        <ValidationMessage For="@(() => eventViewModel.Title)" />
-   </div>
-
-    <div class="form-group">
-        <label for="description">Description</label>
-        <InputTextArea id="description" class="form-control" @bind-Value="eventViewModel.Description" />
-        <ValidationMessage For="@(() => eventViewModel.Description)" />
-    </div>
-
-    <div class="form-group">
-        <label for="startDate">Start Date</label>
-        <InputDate id="startDate" class="form-control" @bind-Value="eventViewModel.StartDate" />
-        <ValidationMessage For="@(() => eventViewModel.StartDate)" />
-    </div>
-
-    <div class="form-group">
-        <label for="endDate">End Date</label>
-        <InputDate id="endDate" class="form-control" @bind-Value="eventViewModel.EndDate" />
-        <ValidationMessage For="@(() => eventViewModel.EndDate)" />
-    </div>
-
-    <div class="form-group">
-        <label for="startTime">Start Time</label>
-        <input type="time" id="startTime" class="form-control" @bind-value="eventViewModel.StartTime" />
-        <ValidationMessage For="@(() => eventViewModel.StartTime)" />
-    </div>
-
-    <div class="form-group">
-        <label for="endTime">End Time</label>
-        <input type="time" id="endTime" class="form-control" @bind-value="eventViewModel.EndTime" />
-        <ValidationMessage For="@(() => eventViewModel.EndTime)" />
-    </div>
-
-    <div class="form-group">
-        <label for="venue">Venue</label>
-        <InputText id="venue" class="form-control" @bind-Value="eventViewModel.Venue" />
-        <ValidationMessage For="@(() => eventViewModel.Venue)" />
-    </div>
-
-    <div class="form-group">
-        <label for="image">Image</label>
-        <InputFile id="image" class="form-control" OnChange="HandleImgUpload" accept=".png"/>
-        <ValidationMessage For="@(() => eventViewModel.CoverImg)" />
-    </div>
-    <br/>
-    @if(eventViewModel.ImgUrl is not null)
-    {
-        <img src=@eventViewModel.ImgUrl alt="event image" class="img-thumbnail"/>
-    }
-    <br />
-    <button type="submit" class="btn btn-primary">Create Event</button>
-    <NavLink class="btn btn-secondary" href="/">Cancel</NavLink>
-</EditForm>
+<EventEditComponent EventViewModel="eventViewModel" OnSave="CreateEvent" ErrorMessage="@errorMessage">
+    <ErrorMsgFragment>
+        <ErrorMsgComponent ErrorMessage="@errorMessage"/>
+    </ErrorMsgFragment>
+</EventEditComponent>
 
 @code {
     private EventViewModel eventViewModel = new EventViewModel();
@@ -97,13 +37,21 @@
 
     private async Task HandleImgUpload(InputFileChangeEventArgs e)
     {
-        eventViewModel.CoverImg = e.File;
+        IBrowserFile file = e.File;
 
-        if(eventViewModel.CoverImg is null)
+        if(file is null)
         {
             errorMessage = "No image selected for the event.";
             return;
         }
+
+        if(file.Size > 500 * 1024) // 5 KB limit
+        {
+            errorMessage = "Image size exceeds the maximum allowed size of 500 KB.";
+            return;
+        }
+
+        eventViewModel.CoverImg = file;
 
         var fileName = Guid.NewGuid().ToString() + Path.GetExtension(eventViewModel.CoverImg.Name);
         var filePath = Path.Combine("wwwroot", "images", "events", fileName);

@@ -67,3 +67,11 @@ h1:focus {
     width: 100%;
     /* other styles */
 }
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: 600;
+}

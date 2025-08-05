@@ -1,0 +1,149 @@
+﻿@using SixLabors.ImageSharp.Processing
+<EditForm Model="EventViewModel" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="title">Title</label>
+        <InputText id="title" class="form-control" @bind-Value="EventViewModel.Title" />
+        <ValidationMessage For="@(() => EventViewModel.Title)" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="EventViewModel.Description" />
+        <ValidationMessage For="@(() => EventViewModel.Description)" />
+    </div>
+
+    <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <InputDate id="startDate" class="form-control" @bind-Value="EventViewModel.StartDate" />
+        <ValidationMessage For="@(() => EventViewModel.StartDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="endDate">End Date</label>
+        <InputDate id="endDate" class="form-control" @bind-Value="EventViewModel.EndDate" />
+        <ValidationMessage For="@(() => EventViewModel.EndDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="startTime">Start Time</label>
+        <input type="time" id="startTime" class="form-control" @bind-value="EventViewModel.StartTime" />
+        <ValidationMessage For="@(() => EventViewModel.StartTime)" />
+    </div>
+
+    <div class="form-group">
+        <label for="endTime">End Time</label>
+        <input type="time" id="endTime" class="form-control" @bind-value="EventViewModel.EndTime" />
+        <ValidationMessage For="@(() => EventViewModel.EndTime)" />
+    </div>
+
+    <div class="form-group">
+        <label for="category">Event Category Type</label>
+        <InputSelect id="category" class="form-control" @bind-Value="EventViewModel.Category">
+            <option value="">Select a category</option>
+            @{
+                // get list of categories from event category enum
+                var categories = Enum.GetNames(typeof(EventCategoryEnum));
+                foreach (var category in categories)
+                {
+                    <option value="@category">@category</option>
+                }
+            }
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => EventViewModel.Category)" />
+    </div>
+
+    @if (EventViewModel.Category == EventCategoryEnum.Inperson.ToString())
+    {
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <InputText id="venue" class="form-control" @bind-Value="EventViewModel.Venue" />
+            <ValidationMessage For="@(() => EventViewModel.Venue)" />
+        </div>
+    }
+    else if (EventViewModel.Category == EventCategoryEnum.Remote.ToString())
+    {
+        <div class="form-group">
+            <label for="link">Event Link</label>
+            <InputText id="link" class="form-control" @bind-Value="EventViewModel.EventLink" />
+            <ValidationMessage For="@(() => EventViewModel.EventLink)" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="image">Image</label>
+        <InputFile id="image" class="form-control" OnChange="HandleImgUpload" accept=".png" />
+        <ValidationMessage For="@(() => EventViewModel.CoverImg)" />
+    </div>
+
+    <br />
+    @if (EventViewModel.ImgUrl is not null)
+    {
+        <img src=@EventViewModel.ImgUrl alt="event image" class="img-thumbnail" />
+    }
+    <br />
+    @if(ErrorMsgFragment is not null)
+    {
+        @ErrorMsgFragment
+    }
+
+)
+    <br />
+    <button type="submit" class="btn btn-primary">Create Event</button>
+    <NavLink class="btn btn-secondary" href="/">Cancel</NavLink>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventViewModel? EventViewModel { get; set; }
+
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    [Parameter]
+    public RenderFragment? ErrorMsgFragment { get; set; }
+
+    [Parameter]
+    public EventCallback<EventViewModel?> OnSave { get; set; }
+
+    private async Task Save()
+    {
+        await OnSave.InvokeAsync(EventViewModel);
+    }
+
+    private async Task HandleImgUpload(InputFileChangeEventArgs e)
+    {
+        IBrowserFile file = e.File;
+
+        if (EventViewModel is null) return;
+
+        if (file is null)
+        {
+            ErrorMessage = "No image selected for the event.";
+            return;
+        }
+
+        if (file.Size > 500 * 1024) // 5 KB limit
+        {
+            ErrorMessage = "Image size exceeds the maximum allowed size of 500 KB.";
+            return;
+        }
+
+        EventViewModel.CoverImg = file;
+
+        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(EventViewModel.CoverImg.Name);
+        var filePath = Path.Combine("wwwroot", "images", "events", fileName);
+
+        using var stream = EventViewModel.CoverImg.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5 MB limit
+        using var image = await SixLabors.ImageSharp.Image.LoadAsync(stream);
+        image.Mutate(x => x.Resize(300, 169));
+
+        using var outputStream = new FileStream(filePath, FileMode.Create);
+        await image.SaveAsync(outputStream, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+
+        EventViewModel.ImgUrl = $"/images/events/{fileName}";
+    }
+}

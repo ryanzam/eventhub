@@ -20,8 +20,10 @@ namespace Eventhub.WebApp.Shared.ViewModel
         [Required]
         public TimeOnly EndTime { get; set; }
 
-        public string? Category { get; set; } = EventCategoryEnum.Inperson.ToString();
+        public string? Category { get; set; }
         public string? Venue { get; set; }
+
+        public string? EventLink { get; set; }
 
         public string? ImgUrl { get; set; }
 
